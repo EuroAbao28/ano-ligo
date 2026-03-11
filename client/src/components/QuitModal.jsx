@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
+import { useLoader } from '../context/LoaderContext'
 
 export default function QuitModal ({ onCancel }) {
   const navigate = useNavigate()
+  const { triggerLoader } = useLoader()
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -17,7 +19,12 @@ export default function QuitModal ({ onCancel }) {
 
   const handleQuit = () => {
     setVisible(false)
-    setTimeout(() => navigate('/'), 400)
+    setTimeout(() => {
+      triggerLoader()
+      setTimeout(() => {
+        navigate('/')
+      }, 900) // wait for loader to be fully opaque (50ms delay + 800ms transition + 50ms buffer)
+    }, 400)
   }
 
   return (

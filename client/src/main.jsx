@@ -3,14 +3,17 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import App from './App'
 import AppLoader from './components/AppLoader'
+import { LoaderProvider } from './context/LoaderContext'
 import './index.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <AppLoader>
-        <App />
-      </AppLoader>
+      <LoaderProvider>
+        <AppLoader>
+          <App />
+        </AppLoader>
+      </LoaderProvider>
     </BrowserRouter>
   </StrictMode>
 )
