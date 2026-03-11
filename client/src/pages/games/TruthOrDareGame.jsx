@@ -91,7 +91,7 @@ function SetupScreen ({ onStart }) {
             {names.map((name, i) => (
               <div key={i} className='flex gap-2 items-center'>
                 <div
-                  className={`w-7 h-7 rounded-full bg-gradient-to-br ${
+                  className={`w-7 h-7 rounded-full bg-linear-to-br ${
                     PLAYER_COLORS[i % PLAYER_COLORS.length]
                   } flex items-center justify-center font-nunito font-bold text-xs text-white shrink-0`}
                 >
@@ -203,7 +203,7 @@ function SpinScreen ({ players, currentPlayerIndex, round, onChoice }) {
 
         {/* Player Avatar */}
         <div
-          className={`w-28 h-28 rounded-full bg-gradient-to-br ${colorGradient} flex items-center justify-center mb-6 shadow-2xl`}
+          className={`w-28 h-28 rounded-full bg-linear-to-br ${colorGradient} flex items-center justify-center mb-6 shadow-2xl`}
         >
           <span className='font-fredoka text-5xl text-white'>
             {player.name.charAt(0).toUpperCase()}
@@ -247,7 +247,7 @@ function SpinScreen ({ players, currentPlayerIndex, round, onChoice }) {
               key={i}
               className={`font-nunito text-xs px-3 py-1 rounded-full border transition-all ${
                 i === currentPlayerIndex
-                  ? `bg-gradient-to-r ${colorGradient} border-transparent text-white font-bold`
+                  ? `bg-linear-to-r ${colorGradient} border-transparent text-white font-bold`
                   : 'border-zinc-800 text-zinc-600'
               }`}
             >
@@ -298,7 +298,7 @@ function ChallengeScreen ({
         {/* Player header */}
         <div className='flex items-center gap-4 mb-8'>
           <div
-            className={`w-12 h-12 rounded-full bg-gradient-to-br ${colorGradient} flex items-center justify-center font-fredoka text-xl text-white shrink-0`}
+            className={`w-12 h-12 rounded-full bg-linear-to-br ${colorGradient} flex items-center justify-center font-fredoka text-xl text-white shrink-0`}
           >
             {player.name.charAt(0).toUpperCase()}
           </div>

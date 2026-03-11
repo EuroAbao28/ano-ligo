@@ -96,7 +96,7 @@ function SetupScreen ({ onStart }) {
               {names.map((name, i) => (
                 <div key={i} className='flex gap-2 items-center'>
                   <div
-                    className={`w-7 h-7 rounded-full bg-gradient-to-br ${
+                    className={`w-7 h-7 rounded-full bg-linear-to-br ${
                       PLAYER_COLORS[i % PLAYER_COLORS.length]
                     } flex items-center justify-center font-nunito font-bold text-xs text-white shrink-0`}
                   >
@@ -451,7 +451,7 @@ function DiscussionScreen ({
             {players.map((p, i) => (
               <div key={i} className='flex items-center gap-3'>
                 <div
-                  className={`w-7 h-7 rounded-full bg-gradient-to-br ${
+                  className={`w-7 h-7 rounded-full bg-linear-to-br ${
                     PLAYER_COLORS[i % PLAYER_COLORS.length]
                   } flex items-center justify-center font-nunito font-bold text-xs text-white`}
                 >
