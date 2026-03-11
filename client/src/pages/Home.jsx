@@ -35,13 +35,13 @@ export default function Home () {
         <div className='absolute top-0 right-1/4 w-96 h-96 bg-pink-500 opacity-10 rounded-full blur-3xl -translate-y-1/2 pointer-events-none' />
         <div className='max-w-5xl mx-auto px-4'>
           <div className='relative text-center pt-16 pb-10'>
-            <div className='inline-block bg-yellow-400 text-zinc-900 text-xs font-nunito font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-4'>
+            <div className='inline-block bg-yellow-400 text-zinc-900 text-[10px] md:text-xs font-nunito font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-4'>
               🎮 Laro ka muna hype ka!
             </div>
             <h1 className='font-fredoka text-6xl md:text-8xl text-white leading-none tracking-wide mb-3'>
               Ano Ligo?
             </h1>
-            <p className='font-nunito text-zinc-400 text-lg max-w-sm mx-auto'>
+            <p className='font-nunito text-zinc-400 text-base md:text-lg max-w-sm mx-auto'>
               Pick a game. Stop overthinking. Just play.
             </p>
           </div>

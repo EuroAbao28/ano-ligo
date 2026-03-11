@@ -1,8 +1,14 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import GameLayout from '../../components/GameLayout'
+import GameTransition from '../../components/GameTransition'
 import { IMPOSTOR_THEMES as THEMES } from '../../data/impostor/themes'
 
-const PHASE = { SETUP: 'setup', REVEAL: 'reveal', DISCUSSION: 'discussion' }
+const PHASE = {
+  SETUP: 'setup',
+  TRANSITION: 'transition',
+  REVEAL: 'reveal',
+  DISCUSSION: 'discussion'
+}
 
 const PLAYER_COLORS = [
   'from-violet-500 to-purple-700',
@@ -96,7 +102,7 @@ function SetupScreen ({ onStart }) {
               {names.map((name, i) => (
                 <div key={i} className='flex gap-2 items-center'>
                   <div
-                    className={`w-7 h-7 rounded-full bg-linear-to-br ${
+                    className={`w-7 h-7 rounded-full bg-gradient-to-br ${
                       PLAYER_COLORS[i % PLAYER_COLORS.length]
                     } flex items-center justify-center font-nunito font-bold text-xs text-white shrink-0`}
                   >
@@ -423,6 +429,139 @@ function RevealScreen ({ players, onDone }) {
   )
 }
 
+function RevealModal ({ impostors, word, onClose }) {
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setVisible(true))
+    return () => cancelAnimationFrame(id)
+  }, [])
+
+  const handleClose = () => {
+    setVisible(false)
+    setTimeout(onClose, 700)
+  }
+
+  return (
+    <div className='fixed inset-0 z-50 flex items-center justify-center px-6'>
+      <style>{`
+        @keyframes suspense-fade-up {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes suspense-glow-red {
+          0%, 100% { opacity: 0.12; }
+          50%       { opacity: 0.22; }
+        }
+        @keyframes suspense-glow-green {
+          0%, 100% { opacity: 0.12; }
+          50%       { opacity: 0.22; }
+        }
+        .anim-label-red   { opacity: 0; animation: suspense-fade-up 0.6s cubic-bezier(0.22,1,0.36,1) 0.5s forwards; }
+        .anim-name        { opacity: 0; animation: suspense-fade-up 0.7s cubic-bezier(0.22,1,0.36,1) 0.85s forwards; }
+        .anim-label-green { opacity: 0; animation: suspense-fade-up 0.6s cubic-bezier(0.22,1,0.36,1) 1.3s forwards; }
+        .anim-word        { opacity: 0; animation: suspense-fade-up 0.7s cubic-bezier(0.22,1,0.36,1) 1.65s forwards; }
+        .anim-button      { opacity: 0; animation: suspense-fade-up 0.5s cubic-bezier(0.22,1,0.36,1) 2.1s forwards; }
+        .glow-red         { animation: suspense-glow-red 2.5s ease-in-out 0.85s infinite; opacity: 0.12; }
+        .glow-green       { animation: suspense-glow-green 2.5s ease-in-out 1.65s infinite; opacity: 0.12; }
+        @keyframes gradient-shift {
+          0%   { background-position: 0% 50%; }
+          50%  { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
+
+      {/* Backdrop — slow creep in */}
+      <div
+        className='absolute inset-0'
+        style={{
+          background: 'rgba(0,0,0,0.85)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          transition: 'opacity 1s cubic-bezier(0.4, 0, 0.2, 1)',
+          opacity: visible ? 1 : 0
+        }}
+        onClick={handleClose}
+      />
+
+      {/* Modal — slow scale up */}
+      <div
+        className='relative w-full max-w-sm'
+        style={{
+          transition:
+            'transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+          transform: visible
+            ? 'translateY(0) scale(1)'
+            : 'translateY(40px) scale(0.94)',
+          opacity: visible ? 1 : 0
+        }}
+      >
+        <div className='bg-zinc-950 rounded-3xl overflow-hidden border border-zinc-800/60 shadow-2xl'>
+          {/* Gradient card wrapping both sections */}
+          <div className='relative mx-4 mt-4 mb-4 rounded-2xl overflow-hidden'>
+            {/* Moving gradient background */}
+            <div
+              className='absolute inset-0 pointer-events-none'
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(239,68,68,0.18) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0) 60%, rgba(52,211,153,0.18) 100%)',
+                backgroundSize: '300% 300%',
+                animation: 'gradient-shift 4s ease infinite'
+              }}
+            />
+
+            {/* Impostor block */}
+            <div className='relative flex flex-col items-center pt-10 pb-8 px-8'>
+              <div
+                className={`absolute -top-16 left-1/2 -translate-x-1/2 w-56 h-56 bg-red-500 rounded-full blur-3xl pointer-events-none glow-red`}
+              />
+              <p className='relative font-nunito text-[11px] text-red-400/50 uppercase tracking-[0.2em] mb-4 anim-label-red'>
+                🔴 {impostors.length === 1 ? 'Impostor' : 'Impostors'}
+              </p>
+              <div className='relative flex flex-col items-center gap-1'>
+                {impostors.map((p, i) => (
+                  <p
+                    key={i}
+                    className='font-fredoka text-4xl sm:text-5xl text-red-300 leading-none anim-name'
+                  >
+                    {p.name}
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            {/* Thin separator */}
+            <div className='h-px bg-gradient-to-r from-transparent via-zinc-700/40 to-transparent mx-6' />
+
+            {/* Word block */}
+            <div className='relative flex flex-col items-center pt-8 pb-10 px-8'>
+              <div
+                className={`absolute -bottom-16 left-1/2 -translate-x-1/2 w-56 h-56 bg-emerald-500 rounded-full blur-3xl pointer-events-none glow-green`}
+              />
+              <p className='relative font-nunito text-[11px] text-emerald-400/50 uppercase tracking-[0.2em] mb-4 anim-label-green'>
+                🟢 The word was
+              </p>
+              <p className='relative font-fredoka text-4xl sm:text-5xl text-emerald-300 leading-none anim-word'>
+                {word}
+              </p>
+            </div>
+          </div>
+
+          {/* Close button */}
+          <div className='px-5 pt-2 pb-5 anim-button'>
+            <button
+              onClick={handleClose}
+              className='w-full py-4 rounded-2xl font-fredoka text-lg text-zinc-500 hover:text-zinc-300 bg-zinc-900/80 hover:bg-zinc-800/80 border border-zinc-800 active:scale-95 transition-all'
+            >
+              Got it 👍
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function DiscussionScreen ({
   players,
   word,
@@ -430,8 +569,21 @@ function DiscussionScreen ({
   impostorCount,
   onPlayAgain
 }) {
-  const [revealed, setRevealed] = useState(false)
+  const REVEAL_STATE = { IDLE: 'idle', CONFIRMING: 'confirming' }
+  const [revealState, setRevealState] = useState(REVEAL_STATE.IDLE)
+  const [showModal, setShowModal] = useState(false)
+  const [hasRevealed, setHasRevealed] = useState(false)
   const impostors = players.filter(p => p.role === 'impostor')
+
+  const handleRevealPress = () => {
+    if (revealState === REVEAL_STATE.IDLE) {
+      setRevealState(REVEAL_STATE.CONFIRMING)
+    } else {
+      setShowModal(true)
+      setHasRevealed(true)
+      setRevealState(REVEAL_STATE.IDLE)
+    }
+  }
 
   return (
     <GameLayout>
@@ -451,7 +603,7 @@ function DiscussionScreen ({
             {players.map((p, i) => (
               <div key={i} className='flex items-center gap-3'>
                 <div
-                  className={`w-7 h-7 rounded-full bg-linear-to-br ${
+                  className={`w-7 h-7 rounded-full bg-gradient-to-br ${
                     PLAYER_COLORS[i % PLAYER_COLORS.length]
                   } flex items-center justify-center font-nunito font-bold text-xs text-white`}
                 >
@@ -477,52 +629,43 @@ function DiscussionScreen ({
         {/* Right — reveal + play again */}
         <div className='flex-1 flex flex-col'>
           <button
-            onClick={() => setRevealed(r => !r)}
-            className={`w-full py-3 rounded-2xl font-nunito text-sm transition-all mb-3 border ${
-              revealed
-                ? 'bg-red-500/10 border-red-500/50 text-red-400'
+            onClick={handleRevealPress}
+            className={`w-full py-3 rounded-2xl font-nunito font-bold text-sm transition-all mb-3 border ${
+              revealState === REVEAL_STATE.CONFIRMING
+                ? 'bg-red-500/20 border-red-500 text-red-400 active:scale-95'
                 : 'bg-zinc-900 border-zinc-700 text-zinc-400 hover:border-yellow-400/50 hover:text-yellow-400'
             }`}
           >
-            {revealed ? '🙈 Hide' : '👁️ Reveal the Impostor'}
+            {revealState === REVEAL_STATE.CONFIRMING
+              ? '⚠️ Sure? Tap again'
+              : hasRevealed
+              ? '👁️ Reveal Again'
+              : '👁️ Reveal Impostor'}
           </button>
-
-          {revealed && (
-            <div className='bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden mb-4'>
-              <div className='p-4 border-b border-zinc-800'>
-                <p className='font-nunito text-xs text-red-500 uppercase tracking-widest mb-3'>
-                  🔴 {impostors.length === 1 ? 'Impostor' : 'Impostors'}
-                </p>
-                <div className='flex flex-col gap-2'>
-                  {impostors.map((p, i) => (
-                    <span
-                      key={i}
-                      className='font-fredoka text-2xl text-red-400'
-                    >
-                      {p.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className='p-4'>
-                <p className='font-nunito text-xs text-emerald-600 uppercase tracking-widest mb-1'>
-                  🟢 The word was
-                </p>
-                <p className='font-fredoka text-3xl text-emerald-400'>{word}</p>
-              </div>
-            </div>
-          )}
 
           <div className='mt-auto pt-6'>
             <button
               onClick={onPlayAgain}
-              className='w-full py-4 rounded-2xl font-fredoka text-xl bg-yellow-400 text-zinc-900 hover:bg-yellow-300 active:scale-95 transition-all shadow-lg shadow-yellow-400/20'
+              disabled={!hasRevealed}
+              className={`w-full py-4 rounded-2xl font-fredoka text-xl transition-all ${
+                hasRevealed
+                  ? 'bg-yellow-400 text-zinc-900 hover:bg-yellow-300 active:scale-95 shadow-lg shadow-yellow-400/20'
+                  : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
+              }`}
             >
               Play Again 🔄
             </button>
           </div>
         </div>
       </div>
+
+      {showModal && (
+        <RevealModal
+          impostors={impostors}
+          word={word}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </GameLayout>
   )
 }
@@ -549,7 +692,7 @@ export default function ImpostorGame () {
     setWord(selectedWord)
     setThemes(themes)
     setPlayers(assignedPlayers)
-    setPhase(PHASE.REVEAL)
+    setPhase(PHASE.TRANSITION)
   }
 
   const handleDiscussion = () => setPhase(PHASE.DISCUSSION)
@@ -563,8 +706,15 @@ export default function ImpostorGame () {
   return (
     <>
       {phase === PHASE.SETUP && <SetupScreen onStart={handleStart} />}
-      {phase === PHASE.REVEAL && (
+      {(phase === PHASE.TRANSITION || phase === PHASE.REVEAL) && (
         <RevealScreen players={players} onDone={handleDiscussion} />
+      )}
+      {phase === PHASE.TRANSITION && (
+        <GameTransition
+          emoji='🕵️'
+          title='Impostor'
+          onDone={() => setPhase(PHASE.REVEAL)}
+        />
       )}
       {phase === PHASE.DISCUSSION && (
         <DiscussionScreen
