@@ -183,7 +183,7 @@ export const IMPOSTOR_THEMES = {
     'Luksong Tinik',
     'Piko'
   ],
-  '📺 Filipino Pop Culture': [
+  '📺 PH Pop Culture': [
     'Eat Bulaga',
     'ASAP',
     "It's Showtime",
@@ -374,7 +374,7 @@ export const IMPOSTOR_THEMES = {
     'Trumpet',
     'Vinyl'
   ],
-  '🍹 Drinks & Street Food': [
+  '🍹 Street Food': [
     'Taho',
     'Samalamig',
     'Buko Juice',
