@@ -36,7 +36,7 @@ export default function Home () {
         <div className='max-w-5xl mx-auto px-4'>
           <div className='relative text-center pt-16 pb-10'>
             <div className='inline-block bg-yellow-400 text-zinc-900 text-xs font-nunito font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-4'>
-              🎮 Mini Games Hub
+              🎮 Laro ka muna hype ka!
             </div>
             <h1 className='font-fredoka text-6xl md:text-8xl text-white leading-none tracking-wide mb-3'>
               Ano Ligo?
@@ -55,7 +55,7 @@ export default function Home () {
             <button
               key={tag}
               onClick={() => setActiveTag(tag)}
-              className={`font-nunito text-sm font-bold px-5 py-2 rounded-full border-2 transition-all duration-200 cursor-pointer
+              className={`font-nunito text-xs sm:text-sm font-bold px-5 py-2 rounded-full border-2 transition-all duration-200 cursor-pointer
                 ${
                   activeTag === tag
                     ? 'bg-yellow-400 border-yellow-400 text-zinc-900 shadow-lg shadow-yellow-400/30'
