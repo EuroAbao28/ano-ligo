@@ -69,21 +69,21 @@ export default function Home () {
       </div>
 
       {/* Game Grid */}
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto px-4 pb-20'>
+      <div className='grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 max-w-5xl mx-auto px-3 sm:px-4 pb-20'>
         {filtered.map((game, i) => (
           <Link
             key={game.id}
             to={game.implemented ? `/game/${game.id}/play` : `/game/${game.id}`}
-            className='fade-up relative rounded-2xl overflow-hidden cursor-pointer group border-2 border-zinc-800 hover:border-zinc-600 transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl no-underline'
+            className='fade-up relative rounded-2xl overflow-hidden cursor-pointer group border-2 border-zinc-800 hover:border-zinc-600 transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl no-underline flex flex-col'
             style={{ animationDelay: `${i * 60}ms` }}
             onMouseEnter={() => setHoveredId(game.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
-            <div className={`h-2 w-full bg-linear-to-r ${game.color}`} />
-            <div className='bg-zinc-900 p-6 h-full'>
-              <div className='flex items-start justify-between mb-4'>
+            <div className={`h-2 w-full bg-gradient-to-r ${game.color}`} />
+            <div className='bg-zinc-900 p-4 sm:p-6 sm:flex-1 flex flex-col'>
+              <div className='flex items-start justify-between mb-3 sm:mb-4'>
                 <span
-                  className={`text-4xl transition-all duration-200 inline-block ${
+                  className={`text-3xl sm:text-4xl transition-all duration-200 inline-block ${
                     hoveredId === game.id ? 'wiggle' : ''
                   }`}
                 >
@@ -91,7 +91,7 @@ export default function Home () {
                 </span>
                 <div className='flex flex-col items-end gap-1'>
                   <span
-                    className={`text-xs font-nunito font-bold px-2 py-0.5 rounded-full bg-linear-to-r ${game.color} text-white`}
+                    className={`text-xs font-nunito font-bold px-2 py-0.5 rounded-full bg-gradient-to-r ${game.color} text-white`}
                   >
                     {game.tag}
                   </span>
@@ -100,14 +100,14 @@ export default function Home () {
                   </span>
                 </div>
               </div>
-              <h2 className='font-fredoka text-2xl text-white mb-1 tracking-wide'>
+              <h2 className='font-fredoka text-xl sm:text-2xl text-white mb-1 tracking-wide'>
                 {game.title}
               </h2>
-              <p className='font-nunito text-sm text-zinc-500 leading-relaxed mb-5'>
+              <p className='font-nunito text-xs sm:text-sm text-zinc-500 leading-relaxed mb-3 sm:mb-5'>
                 {game.description}
               </p>
               <div
-                className={`w-full py-2.5 rounded-xl font-nunito font-bold text-sm text-center bg-linear-to-r ${game.color} text-white opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-2 group-hover:translate-y-0 `}
+                className={`mt-auto w-full py-2.5 rounded-xl font-nunito font-bold text-sm text-center bg-gradient-to-r ${game.color} text-white opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-2 group-hover:translate-y-0`}
               >
                 {game.implemented ? 'Play Now →' : 'Coming Soon...'}
               </div>
