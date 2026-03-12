@@ -59,5 +59,16 @@ export const games = [
     players: '3P+',
     color: 'from-cyan-500 to-cyan-900',
     implemented: false
+  },
+  {
+    id: '7',
+    title: 'Challenge Roulette',
+    description:
+      'Spin the wheel, face the challenge. Full shots, dares, and chaos await.',
+    emoji: '🎰',
+    tag: 'Classic',
+    players: '2P+',
+    color: 'from-amber-500 to-orange-800',
+    implemented: true
   }
 ]
